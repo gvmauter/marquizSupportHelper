@@ -1,7 +1,4 @@
-// 1. Найти ID квиза на старнице
-// 2. Отправить http запрос с помощью этого ID(промис)
-// 3. Обработать данные 
-// 4. Передаем с помощью сообщения в обработчик background.js
+// Создание функций на странице браузера
 
 function searchQuizId () {
   return new Promise ((resolve) => {
@@ -19,23 +16,41 @@ async function getHttp(quizId) {
   return result.json() 
   }
 
-
-
-
-
-const search = setInterval(() => {
-
+function startSearch () {
+  // Функция объединяющая все действия с данными
   searchQuizId ()
-  .then((quizId) => getHttp(quizId))
-  .then((data) => { 
-    chrome.runtime.sendMessage({
-      domain: 'chrome-extension://*',
-      data
-    });
-  }).catch((err) => {
-    console.log(err)
-    clearInterval(search);
-  })
-}, 1000);
+    .then((quizId) => getHttp(quizId))
+    .then((data) => { 
+      chrome.runtime.sendMessage({
+        domain: 'chrome-extension://*',
+        data
+      });
+    }).catch((err) => {
+      console.log(err)
+      chrome.runtime.sendMessage({
+        domain: 'chrome-extension://*',
+        data : null
+        });
+    })
+}
+
+
+
+
+// Старый способ реализации
+// const search = setInterval(() => {
+
+//   searchQuizId ()
+//   .then((quizId) => getHttp(quizId))
+//   .then((data) => { 
+//     chrome.runtime.sendMessage({
+//       domain: 'chrome-extension://*',
+//       data
+//     });
+//   }).catch((err) => {
+//     console.log(err)
+//     clearInterval(search);
+//   })
+// }, 1000);
 
 

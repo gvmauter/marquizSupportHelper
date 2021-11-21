@@ -19,8 +19,7 @@
     "scripts":["background.js"]
   },
   "permissions": [
-    "tabs",
-    "*://*/*"
+    "activeTab"
   ],
   "browser_action": {
     "default_title": "Marquiz Support Helper",

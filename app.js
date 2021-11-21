@@ -1,15 +1,16 @@
 // 1. Найти ID квиза на старнице
 // 2. Отправить http запрос с помощью этого ID(промис)
 // 3. Обработать данные 
-// 4. Отрисовать кнопку приложения
-// 5. Повешать событие на кнопку для  открытия блока с функциями 
+// 4. Передаем с помощью сообщения в обработчик background.js
 
 function searchQuizId () {
-  // функция ищет id квиза и возвращает его если надет 
-  const href = document.querySelector('.whitelabel__container a').getAttribute('href')
-  let array = href.split('=');
-  
-  return array[array.length-1]
+  return new Promise ((resolve) => {
+    const href = document.querySelector('.whitelabel__container a').getAttribute('href')
+    let array = href.split('=');
+    resolve (array[array.length-1])
+  })
+  // функция ищет id квиза и возвращает его если надет
+
 }
 
 async function getHttp(quizId) {
@@ -19,17 +20,22 @@ async function getHttp(quizId) {
   }
 
 
-(() => new Promise ((resolve, reject) => {
-  setTimeout(()=> {
-    resolve(searchQuizId ())
-  }, 3000)
-}))()
+
+
+
+const search = setInterval(() => {
+
+  searchQuizId ()
   .then((quizId) => getHttp(quizId))
-  .then((data) => {
-    let button = document.createElement('a');
-    button.setAttribute('style', 'position: fixed ;width: 20px;height: 20px;background-color: pink;top: 10px;right: 10px;z-index: 1;opacity: .4;     display: block;');
-    button.href = `https://panel.marquiz.ru/quizzes/${data.id}/edit#start_page`;
-    document.body.appendChild(button)
-    console.log(data)
-    return data
+  .then((data) => { 
+    chrome.runtime.sendMessage({
+      domain: 'chrome-extension://*',
+      data
+    });
+  }).catch((err) => {
+    console.log(err)
+    clearInterval(search);
   })
+}, 1500);
+
+

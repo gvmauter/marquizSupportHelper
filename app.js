@@ -36,6 +36,6 @@ const search = setInterval(() => {
     console.log(err)
     clearInterval(search);
   })
-}, 1500);
+}, 1000);
 
 

@@ -5,6 +5,8 @@
 
 
 chrome.runtime.onMessage.addListener(function GetMessage (message) {
+  document.querySelector('.info').textContent = "";
+
   document.querySelector('.menu').classList.add('active');
   document.querySelector('#inputQuizId').value = message.data.id; 
   document.querySelector('#inputUserId').value = message.data.userId;
@@ -16,6 +18,7 @@ chrome.runtime.onMessage.addListener(function GetMessage (message) {
 function copy(id) {
   var copyText = document.querySelector(`#${id}`);
   window.navigator.clipboard.writeText(copyText.value)
+  document.querySelector('.info').textContent = "Скопированно";
 }
 
 document.querySelector("#copyQuizId").addEventListener("click", () => {

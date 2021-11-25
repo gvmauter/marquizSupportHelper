@@ -39,14 +39,6 @@ function copy(id) {
 
 
 
-// const button = document.querySelector('.button_search');
-// button.addEventListener('click', () => {
-//   chrome.tabs.executeScript(null,
-//     {code: "startSearch()"
-//     }
-//   )
-// })
-
 chrome.tabs.executeScript(null,
   {code: "startSearch()"
   }

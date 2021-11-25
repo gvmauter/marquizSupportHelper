@@ -2,9 +2,19 @@
 
 function searchQuizId () {
   return new Promise ((resolve) => {
-    const href = document.querySelector('.whitelabel__container a').getAttribute('href')
-    let array = href.split('=');
-    resolve (array[array.length-1])
+    
+    let link = document.querySelector('.whitelabel__container a')
+    let array, id;
+    if (link) {
+      const href = link.getAttribute('href')
+      array= href.split(/=|&/);
+      id = array[array.indexOf('utm_content') + 1]
+    } else {
+      idElem = document.querySelector("iframe").getAttribute('id');
+      array = idElem.split('_');
+      id = array[array.length-1 ]
+    }
+    resolve (id)    
   })
   // функция ищет id квиза и возвращает его если надет
 
@@ -22,13 +32,13 @@ function startSearch () {
     .then((quizId) => getHttp(quizId))
     .then((data) => { 
       chrome.runtime.sendMessage({
-        domain: 'chrome-extension://*',
+        domain: '*://*',
         data
       });
     }).catch((err) => {
       console.log(err)
       chrome.runtime.sendMessage({
-        domain: 'chrome-extension://*',
+        domain: '*://*',
         data : null
         });
     })
@@ -36,21 +46,5 @@ function startSearch () {
 
 
 
-
-// Старый способ реализации
-// const search = setInterval(() => {
-
-//   searchQuizId ()
-//   .then((quizId) => getHttp(quizId))
-//   .then((data) => { 
-//     chrome.runtime.sendMessage({
-//       domain: 'chrome-extension://*',
-//       data
-//     });
-//   }).catch((err) => {
-//     console.log(err)
-//     clearInterval(search);
-//   })
-// }, 1000);
 
 
